@@ -8,9 +8,7 @@ export class Cart {
     }
 
     addItem(item: IProduct): void {
-        if (!this.hasItem(item.id)) {
             this._items.push(item);
-        }
     }
 
     removeItem(id: string): void {

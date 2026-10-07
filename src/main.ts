@@ -3,8 +3,10 @@ import { Api } from './components/base/Api';
 import { Catalog } from './components/Models/Catalog';
 import { Cart } from './components/Models/Cart';
 import { Order } from './components/Models/Order';
-import { LarekAPI } from './components/Models/LarekAPI';
+import { LarekAPI } from './components/LarekAPI';
 import { apiProducts } from './utils/data';
+import { API_URL } from './utils/constants';
+
 
 console.log('Тестирование каталога')
 const catalogModel = new Catalog();
@@ -43,13 +45,11 @@ orderModel.clear();
 console.log('Данные после очистки:', orderModel.getAll());
 
 console.log('Тестирование Api');
-const api = new Api(import.meta.env.VITE_API_ORIGIN, {
-    headers: { 'Content-Type': 'application/json' }
-});
+const api = new Api(API_URL);
 const larekAPI = new LarekAPI(api);
 larekAPI.getProductList()
     .then((data) => {
-        console.log('Данные получены с сервера:');
+        console.log('Данные получены с сервера');
         console.log('Всего товаров:', data.total);
         console.log('Первые 3 товара:', data.items.slice(0, 3));
         catalogModel.setItems(data.items);
