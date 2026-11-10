@@ -1,22 +1,36 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Cart {
     private _items: IProduct[] = [];
+
+    private events: IEvents;
+
+    constructor(events: IEvents) {
+        this.events = events;
+    }
 
     getItems(): IProduct[] {
         return this._items;
     }
 
     addItem(item: IProduct): void {
-            this._items.push(item);
+        if (this.hasItem(item.id)) return;
+        this._items.push(item);
+        this.events.emit('cart:changed', { items: this._items });
     }
 
     removeItem(id: string): void {
+        const initialLength = this._items.length;
         this._items = this._items.filter((item) => item.id !== id);
+        if (this._items.length !== initialLength) {
+            this.events.emit('cart:changed', { items: this._items });
+        }
     }
 
     clear(): void {
         this._items = [];
+        this.events.emit('cart:changed', { items: this._items });
     }
 
     getTotalPrice(): number {
